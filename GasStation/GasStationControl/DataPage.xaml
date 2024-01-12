@@ -1,0 +1,52 @@
+﻿<Page x:Class="GasStationControl.DataPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GasStationControl"
+      mc:Ignorable="d" 
+      d:DesignHeight="256" d:DesignWidth="468"
+      FontSize="24"
+      Title="DataPage">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Адрес: " Margin="5"/>
+                <TextBox   Name="Address" Width="362" FontSize="16" Height="38" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="АИ-92" Margin="5"/>
+                <TextBlock Text="Цена: " Margin="5"/>
+                <TextBox   Name="TBox92_cost" Width="80" Height="36" Margin="5" />
+                <TextBlock Text="Осталось: " Margin="5"/>
+                <TextBox   Name="TBox92_amount" Width="80" Height="36" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="АИ-95" Margin="5"/>
+                <TextBlock Text="Цена: " Margin="5"/>
+                <TextBox   Name="TBox95_cost" Width="80" Height="36" Margin="5"/>
+                <TextBlock Text="Осталось: " Margin="5"/>
+                <TextBox   Name="TBox95_amount" Width="80" Height="36" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="АИ-95" Margin="5"/>
+                <TextBlock Text="Цена: " Margin="5"/>
+                <TextBox   Name="TBox98_cost" Width="80" Height="36" Margin="5"/>
+                <TextBlock Text="Осталось: " Margin="5"/>
+                <TextBox   Name="TBox98_amount" Width="80" Height="36" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="ДТ" Margin="5 5 46 5"/>
+                <TextBlock Text="Цена: " Margin="5"/>
+                <TextBox   Name="TBoxDF_cost" Width="80" Height="36" Margin="5"/>
+                <TextBlock Text="Осталось: " Margin="5"/>
+                <TextBox   Name="TBoxDF_amount" Width="80" Height="36" Margin="5"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Width="130" Height="24" FontSize="12" Name="BtnSave" Click="BtnSave_Click" Content="Сохранить изменения"></Button>
+                <Button Width="70" Height="24" Margin="10 0 0 0" FontSize="12" Click="BtnBack_Click" Name="BtnBack" Content="Отменить"/>
+            </StackPanel>
+            </StackPanel>
+    </Grid>
+</Page>
