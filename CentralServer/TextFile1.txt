@@ -1,0 +1,7 @@
+﻿protected static GasStationdbEntities _context;
+        public static GasStationdbEntities GetContext() { 
+        if( _context == null) {
+                _context = new GasStationdbEntities();
+            }
+        return _context;
+        }

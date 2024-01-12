@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище GasStationdbModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GasStationdb.dbo.Camera_load" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Camera_load">
+          <Key>
+            <PropertyRef Name="date" />
+            <PropertyRef Name="status" />
+            <PropertyRef Name="img" />
+          </Key>
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="status" Type="bit" Nullable="false" />
+          <Property Name="state_number" Type="nvarchar" MaxLength="50" />
+          <Property Name="img" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CreditCard">
+          <Key>
+            <PropertyRef Name="CardNumber" />
+          </Key>
+          <Property Name="CardIssuer" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CardNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="CardExpDate" Type="date" Nullable="false" />
+          <Property Name="Balance" Type="int" Nullable="false" />
+          <Property Name="CardHolder" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DepositCard">
+          <Key>
+            <PropertyRef Name="CardNumber" />
+          </Key>
+          <Property Name="CardIssuer" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CardNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="CardExpDate" Type="date" Nullable="false" />
+          <Property Name="Balance" Type="int" Nullable="false" />
+          <Property Name="CardHolder" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fuel_List">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Station_ID" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="30" />
+          <Property Name="Price" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="AmountOfFuel" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Gas_Station">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Gas_station" Type="nvarchar" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Gas_Station_ID">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Address" Type="nvarchar" MaxLength="120" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Loyalty_Сards">
+          <Key>
+            <PropertyRef Name="LoyaltyСard" />
+          </Key>
+          <Property Name="LoyaltyСard" Type="int" Nullable="false" />
+          <Property Name="CardHolder" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Balance" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Fuel_List_Gas_Station_ID">
+          <End Role="Gas_Station_ID" Type="Self.Gas_Station_ID" Multiplicity="0..1" />
+          <End Role="Fuel_List" Type="Self.Fuel_List" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gas_Station_ID">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Fuel_List">
+              <PropertyRef Name="Station_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Gas_Station_Gas_Station_ID">
+          <End Role="Gas_Station_ID" Type="Self.Gas_Station_ID" Multiplicity="1" />
+          <End Role="Gas_Station" Type="Self.Gas_Station" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Gas_Station_ID">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Gas_Station">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище GasStationdbModelContainer">
+          <EntitySet Name="CreditCard" EntityType="Self.CreditCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DepositCard" EntityType="Self.DepositCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fuel_List" EntityType="Self.Fuel_List" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Gas_Station" EntityType="Self.Gas_Station" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Gas_Station_ID" EntityType="Self.Gas_Station_ID" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Loyalty_Сards" EntityType="Self.Loyalty_Сards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Camera_load" EntityType="Self.Camera_load" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Camera_load].[date] AS [date], 
+    [Camera_load].[status] AS [status], 
+    [Camera_load].[state_number] AS [state_number], 
+    [Camera_load].[img] AS [img]
+    FROM [dbo].[Camera_load] AS [Camera_load]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Fuel_List_Gas_Station_ID" Association="Self.FK_Fuel_List_Gas_Station_ID">
+            <End Role="Gas_Station_ID" EntitySet="Gas_Station_ID" />
+            <End Role="Fuel_List" EntitySet="Fuel_List" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Gas_Station_Gas_Station_ID" Association="Self.FK_Gas_Station_Gas_Station_ID">
+            <End Role="Gas_Station_ID" EntitySet="Gas_Station_ID" />
+            <End Role="Gas_Station" EntitySet="Gas_Station" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GasStationdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CreditCard">
+          <Key>
+            <PropertyRef Name="CardNumber" />
+          </Key>
+          <Property Name="CardIssuer" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CardNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CardExpDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Balance" Type="Int32" Nullable="false" />
+          <Property Name="CardHolder" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DepositCard">
+          <Key>
+            <PropertyRef Name="CardNumber" />
+          </Key>
+          <Property Name="CardIssuer" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CardNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CardExpDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Balance" Type="Int32" Nullable="false" />
+          <Property Name="CardHolder" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fuel_List">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Station_ID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="AmountOfFuel" Type="Int32" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Gas_Station_ID" Relationship="Self.FK_Fuel_List_Gas_Station_ID" FromRole="Fuel_List" ToRole="Gas_Station_ID" />
+        </EntityType>
+        <EntityType Name="Gas_Station">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Gas_station1" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Gas_Station_ID" Relationship="Self.FK_Gas_Station_Gas_Station_ID" FromRole="Gas_Station" ToRole="Gas_Station_ID" />
+        </EntityType>
+        <EntityType Name="Gas_Station_ID">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Address" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Fuel_List" Relationship="Self.FK_Fuel_List_Gas_Station_ID" FromRole="Gas_Station_ID" ToRole="Fuel_List" />
+          <NavigationProperty Name="Gas_Station" Relationship="Self.FK_Gas_Station_Gas_Station_ID" FromRole="Gas_Station_ID" ToRole="Gas_Station" />
+        </EntityType>
+        <EntityType Name="Loyalty_Сards">
+          <Key>
+            <PropertyRef Name="LoyaltyСard" />
+          </Key>
+          <Property Name="LoyaltyСard" Type="Int32" Nullable="false" />
+          <Property Name="CardHolder" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Balance" Type="Int16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Camera_load">
+          <Key>
+            <PropertyRef Name="date" />
+            <PropertyRef Name="status" />
+            <PropertyRef Name="img" />
+          </Key>
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="status" Type="Boolean" Nullable="false" />
+          <Property Name="state_number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="img" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Fuel_List_Gas_Station_ID">
+          <End Role="Gas_Station_ID" Type="Self.Gas_Station_ID" Multiplicity="0..1" />
+          <End Role="Fuel_List" Type="Self.Fuel_List" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gas_Station_ID">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Fuel_List">
+              <PropertyRef Name="Station_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Gas_Station_Gas_Station_ID">
+          <End Role="Gas_Station_ID" Type="Self.Gas_Station_ID" Multiplicity="1" />
+          <End Role="Gas_Station" Type="Self.Gas_Station" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Gas_Station_ID">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Gas_Station">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GasStationdbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CreditCard" EntityType="Self.CreditCard" />
+          <EntitySet Name="DepositCard" EntityType="Self.DepositCard" />
+          <EntitySet Name="Fuel_List" EntityType="Self.Fuel_List" />
+          <EntitySet Name="Gas_Station" EntityType="Self.Gas_Station" />
+          <EntitySet Name="Gas_Station_ID" EntityType="Self.Gas_Station_ID" />
+          <EntitySet Name="Loyalty_Сards" EntityType="Self.Loyalty_Сards" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Camera_load" EntityType="Self.Camera_load" />
+          <AssociationSet Name="FK_Fuel_List_Gas_Station_ID" Association="Self.FK_Fuel_List_Gas_Station_ID">
+            <End Role="Gas_Station_ID" EntitySet="Gas_Station_ID" />
+            <End Role="Fuel_List" EntitySet="Fuel_List" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Gas_Station_Gas_Station_ID" Association="Self.FK_Gas_Station_Gas_Station_ID">
+            <End Role="Gas_Station_ID" EntitySet="Gas_Station_ID" />
+            <End Role="Gas_Station" EntitySet="Gas_Station" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище GasStationdbModelContainer" CdmEntityContainer="GasStationdbEntities">
+          <EntitySetMapping Name="CreditCard">
+            <EntityTypeMapping TypeName="GasStationdbModel.CreditCard">
+              <MappingFragment StoreEntitySet="CreditCard">
+                <ScalarProperty Name="CardIssuer" ColumnName="CardIssuer" />
+                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
+                <ScalarProperty Name="CardExpDate" ColumnName="CardExpDate" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="CardHolder" ColumnName="CardHolder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DepositCard">
+            <EntityTypeMapping TypeName="GasStationdbModel.DepositCard">
+              <MappingFragment StoreEntitySet="DepositCard">
+                <ScalarProperty Name="CardIssuer" ColumnName="CardIssuer" />
+                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
+                <ScalarProperty Name="CardExpDate" ColumnName="CardExpDate" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="CardHolder" ColumnName="CardHolder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fuel_List">
+            <EntityTypeMapping TypeName="GasStationdbModel.Fuel_List">
+              <MappingFragment StoreEntitySet="Fuel_List">
+                <ScalarProperty Name="Station_ID" ColumnName="Station_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="AmountOfFuel" ColumnName="AmountOfFuel" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Gas_Station">
+            <EntityTypeMapping TypeName="GasStationdbModel.Gas_Station">
+              <MappingFragment StoreEntitySet="Gas_Station">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Gas_station1" ColumnName="Gas_station" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Gas_Station_ID">
+            <EntityTypeMapping TypeName="GasStationdbModel.Gas_Station_ID">
+              <MappingFragment StoreEntitySet="Gas_Station_ID">
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Loyalty_Сards">
+            <EntityTypeMapping TypeName="GasStationdbModel.Loyalty_Сards">
+              <MappingFragment StoreEntitySet="Loyalty_Сards">
+                <ScalarProperty Name="LoyaltyСard" ColumnName="LoyaltyСard" />
+                <ScalarProperty Name="CardHolder" ColumnName="CardHolder" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="GasStationdbModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Camera_load">
+            <EntityTypeMapping TypeName="GasStationdbModel.Camera_load">
+              <MappingFragment StoreEntitySet="Camera_load">
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="state_number" ColumnName="state_number" />
+                <ScalarProperty Name="img" ColumnName="img" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
