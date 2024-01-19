@@ -44,79 +44,69 @@ namespace CentralServer {
                         var stationId = Convert.ToInt32(request.Url.Query.Split('=')[1]);
                         Logs.Text += "\ngetStationInfo; ID = " + stationId;
                         //find correct station
-                        var station = context.Fuel_List.ToList().Where(p => p.Station_ID == stationId).ToList();
+                        var station = context.Gas_Station_ID.ToList().Where(p => p.ID == stationId).ToList();
                         if (station.Count != 0) {
                             Logs.Text += "\nStations records Found: " + station.Count;
-                            StringBuilder fueldata = new StringBuilder();
-                            fueldata.AppendLine("addr:" + context.Gas_Station_ID.ToList().Where(p => p.ID == stationId).ToList().First().Address);
-                            foreach (var item in station) {
-                                Logs.Text += "\n" + String.Format("{0} at {1}L costs {2} at sql ID {3}", item.Name, item.AmountOfFuel, item.Price, item.ID);
-                                //building data for sending to server
-                                fueldata.AppendLine(String.Format("{0}:{1}:{2}:{3}", item.Name, item.AmountOfFuel, item.Price, item.ID));
-                            }
+                            string jsonData = JsonSerializer.Serialize(station.First(),new JsonSerializerOptions(){ ReferenceHandler = ReferenceHandler.IgnoreCycles });
                             //send data to control app
-                            serverContext.Response.Close(Encoding.UTF8.GetBytes(fueldata.ToString()), false);
+                            serverContext.Response.Close(Encoding.UTF8.GetBytes(jsonData.ToString()), false);
                         }
                         else {
-                            Logs.Text += "\nNo such station found";
-                            ///TODO: creating new station not implemented yet
-                            ///need to make new station address TextBox writable if StatusCode == 500 
-                            ///on Control project
-                            serverContext.Response.StatusCode = 500;
-                            serverContext.Response.Close();
-
+                            stationId = Convert.ToInt32(request.Url.Query.Split('=')[1]);
+                            Logs.Text += "\nNo " + stationId + " station found, creating new";
+                            serverContext.Response.Close(Encoding.UTF8.GetBytes(stationId.ToString()), false);
                         }
                         break;
                     case "setStation":
                         Logs.AppendText("\nGot POST reqest");
                         string content = null;
-                        Fuel_List overrideStation = new Fuel_List();
-                        Gas_Station_ID overrideStationID = new Gas_Station_ID();
+                        string newAddr = "";
                         using (var reader = new StreamReader(request.InputStream))
                             content = reader.ReadToEnd();
+                        ///TODO:
+                        ///Rewrite this part of code to work with JSON structure
                         var resSplit = content.Split('\n');
+                        int currStationID = 0;
+                        Gas_Station_ID gas_Station_ID = new Gas_Station_ID();
                         foreach (var line in resSplit) {
                             var tokens = line.Split(':');
                             switch (tokens[0]) {
                                 case "id":
-                                    overrideStationID.ID = int.Parse(tokens[1]);
-                                    overrideStation.Station_ID = int.Parse(tokens[1]);
+                                    currStationID = Convert.ToInt32(tokens[1]);
                                     break;
                                 case "": break;
                                 case "addr":
-                                    overrideStationID.Address = tokens[1];
+                                    Gas_Station gas_Station = new Gas_Station();
+                                    gas_Station.ID = Convert.ToInt32(currStationID);
+                                    gas_Station.Gas_Station_ID = gas_Station_ID;
+                                    gas_Station.Gas_station1 = "test";
+                                    gas_Station_ID.Address = tokens[1];
+                                    gas_Station_ID.ID = currStationID;
+
+                                    GasStationdbEntities.GetContext().Gas_Station.AddOrUpdate(gas_Station);
+                                    GasStationdbEntities.GetContext().Gas_Station_ID.AddOrUpdate(gas_Station_ID);
                                     break;
                                 default:
                                     Fuel_List editedEntry = GasStationdbEntities.GetContext().Fuel_List.ToList().Find(
                                         (p) => p.ID == int.Parse(tokens[3])
                                         );
+                                    if (editedEntry == null) {
+                                        editedEntry = new Fuel_List();
+                                        editedEntry.ID = 0;
+                                    }
                                     if (editedEntry != null) {
                                         editedEntry.Name = tokens[0];
+                                        editedEntry.Gas_Station_ID = gas_Station_ID;
+                                        editedEntry.Station_ID = currStationID;
                                         editedEntry.Price = decimal.Parse(tokens[2]);
                                         editedEntry.AmountOfFuel = int.Parse(tokens[1]);
                                     }
                                     GasStationdbEntities.GetContext().Fuel_List.AddOrUpdate(editedEntry);
-                                    GasStationdbEntities.GetContext().SaveChanges();
-                                    var modifList = GasStationdbEntities.GetContext().Fuel_List.ToList();
-
-                                    //overrideStation.Name = tokens[0];
-                                    //overrideStation.Price = decimal.Parse(tokens[2]);
-                                    //overrideStation.AmountOfFuel = int.Parse(tokens[1]);
-                                    //overrideStation.ID = int.Parse(tokens[3]);
-                                    ////push changes to db
-                                    //GasStationdbEntities.GetContext().Fuel_List.Remove(
-                                    //    GasStationdbEntities.GetContext().Fuel_List.ToList().Find(
-                                    //        (p) => p.ID == overrideStation.ID
-                                    //    )
-                                    //    );
-                                    //GasStationdbEntities.GetContext().Fuel_List.Add(overrideStation);
-                                    ////GasStationdbEntities.GetContext().Fuel_List.Add(overrideStation);
                                     break;
                             }
                             //push new address to db
-                            GasStationdbEntities.GetContext().Gas_Station_ID.AddOrUpdate(overrideStationID);
-
                         }
+                        GasStationdbEntities.GetContext().SaveChanges();
                         break;
                 }
                 Logs.ScrollToEnd();
