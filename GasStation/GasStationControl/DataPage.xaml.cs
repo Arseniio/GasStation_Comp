@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,7 +29,6 @@ namespace GasStationControl {
     public partial class DataPage : Page {
         HttpClient httpClient = null;
         string StationID;
-        bool newStation = false;
         JsonNode jsonData = null;
         JsonNode fuelData = null;
         public DataPage(string stationID) {
@@ -39,17 +39,17 @@ namespace GasStationControl {
             var httpResponse = httpClient.GetAsync("/getStationInfo?id=" + stationID).Result;
             string data = null;
             if (httpResponse.StatusCode != HttpStatusCode.OK) {
+                MessageBox.Show("Retrive data from server error");
                 return;
             }
             data = httpResponse.Content.ReadAsStringAsync().Result;
-            if (data == stationID) {
-                newStation = true;
+            jsonData = JsonNode.Parse(data);
+            //Response parser
+            fuelData = jsonData!["Fuel_List"];
+            if (((string?)jsonData!["Address"]) == null) {
                 return;
             }
-            //Response parser
-            jsonData = JsonNode.Parse(data);
-            Address.Text = jsonData!["Address"].ToString();
-            fuelData = jsonData!["Fuel_List"];
+            Address.Text = jsonData["Address"].ToString();
             foreach (var record in fuelData.AsArray()) {
                 switch (record!["Name"].ToString()) {
                     case "92":
@@ -75,29 +75,24 @@ namespace GasStationControl {
             if (FrameManager.frame.CanGoBack) FrameManager.frame.GoBack();
         }
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e) {
+
+            private void BtnSave_Click(object sender, RoutedEventArgs e) {
             var i = 0;
-            jsonData!["Address"] = Address.Text;
-            foreach (var fuelType in new[] { "92","95","98","DF" }) {
+            if (!string.IsNullOrEmpty(Address.Text)) jsonData!["Address"] = Address.Text;
+            foreach (var fuelType in new[] { "92", "95", "98", "DF" }) {
                 ///чат гпт интересную конструкцию подсказал(не особо фанат,использую только пока json изучаю),
                 ///это подставит название из верхнего массива и вернёт TextBox
                 ///так же для примерно такой же штуки можно использовать nameof,вернёт название переменной как строку :)
                 TextBox TBAmount = FindName($"TBox{fuelType}_amount") as TextBox;
                 TextBox TBCost = FindName($"TBox{fuelType}_cost") as TextBox;
-                fuelData.AsArray()[i]!["AmountOfFuel"] = TBAmount.Text;
-                fuelData.AsArray()[i]!["Price"] = TBCost.Text;
+                if (string.IsNullOrEmpty(TBAmount.Text) || string.IsNullOrEmpty(TBAmount.Text)) return;
+                fuelData.AsArray()[i]!["AmountOfFuel"] = int.Parse(TBAmount.Text);
+                fuelData.AsArray()[i]!["Price"] = decimal.Parse(TBCost.Text.Replace('.', ','));
                 i++;
             }
-            var debug = jsonData.ToString();
             var response = httpClient.PostAsync("setStation", new StringContent(jsonData.ToString()));
-            //StringBuilder sendData = new StringBuilder();
-            //sendData.AppendLine(String.Format("id:{0}", StationID));
-            //sendData.AppendLine(String.Format("addr:{0}", Address.Text));
-            //sendData.AppendLine(String.Format("{0}:{1}:{2}:{3}", "92", TBox92_amount.Text, TBox92_cost.Text, dbRecords[0]));
-            //sendData.AppendLine(String.Format("{0}:{1}:{2}:{3}", "95", TBox95_amount.Text, TBox95_cost.Text, dbRecords[1]));
-            //sendData.AppendLine(String.Format("{0}:{1}:{2}:{3}", "98", TBox98_amount.Text, TBox98_cost.Text, dbRecords[2]));
-            //sendData.AppendLine(String.Format("{0}:{1}:{2}:{3}", "Disel Fuel", TBoxDF_amount.Text, TBoxDF_cost.Text, dbRecords[3]));
-
         }
+
+
     }
 }

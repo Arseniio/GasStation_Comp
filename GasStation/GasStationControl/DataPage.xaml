@@ -30,7 +30,7 @@
                 <TextBox   Name="TBox95_amount" Width="80" Height="36" Margin="5"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="АИ-95" Margin="5"/>
+                <TextBlock Text="АИ-98" Margin="5"/>
                 <TextBlock Text="Цена: " Margin="5"/>
                 <TextBox   Name="TBox98_cost" Width="80" Height="36" Margin="5"/>
                 <TextBlock Text="Осталось: " Margin="5"/>

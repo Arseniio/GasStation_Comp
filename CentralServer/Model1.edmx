@@ -52,7 +52,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Gas_station" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="Gas_Station_ID">
@@ -60,7 +60,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="Address" Type="nvarchar" MaxLength="120" />
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Loyalty_Сards">
           <Key>
@@ -169,7 +169,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Gas_station1" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Gas_Station_ID" Relationship="Self.FK_Gas_Station_Gas_Station_ID" FromRole="Gas_Station" ToRole="Gas_Station_ID" />
         </EntityType>
@@ -178,7 +178,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="Address" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Fuel_List" Relationship="Self.FK_Fuel_List_Gas_Station_ID" FromRole="Gas_Station_ID" ToRole="Fuel_List" />
           <NavigationProperty Name="Gas_Station" Relationship="Self.FK_Gas_Station_Gas_Station_ID" FromRole="Gas_Station_ID" ToRole="Gas_Station" />
         </EntityType>
